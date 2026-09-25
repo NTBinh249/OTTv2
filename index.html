@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OTTv2 — Đấm Lá Kéo 9×9</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>OTTv2</h1>
+        <p class="subtitle">Đấm • Lá • Kéo · bàn cờ 9×9 · multiplayer</p>
+      </div>
+      <div class="room-box">
+        <span>Phòng</span>
+        <strong id="roomCode">—</strong>
+        <button id="copyRoom" class="small-btn">Copy link</button>
+      </div>
+    </header>
+
+    <section id="lobby" class="panel">
+      <h2>Vào trận</h2>
+      <p id="joinStatus">Đang kết nối PlayHTML…</p>
+      <div class="join-row">
+        <input id="roomInput" maxlength="20" placeholder="Mã phòng, ví dụ ABC123">
+        <button id="joinRoomBtn">Vào phòng</button>
+      </div>
+      <div class="rules">
+        <b>Luật nhanh:</b> mỗi bên có 3 Đấm, 3 Lá, 3 Kéo. Mỗi lượt đi đúng 1 ô trong 8 hướng.
+        Đấm ăn Kéo, Kéo ăn Lá, Lá ăn Đấm. Hai quân cùng loại không ăn nhau.
+        Quân bị khắc chế không được đi vào ô đối phương. P1 thắng khi tới <b>i9</b>, P2 thắng khi tới <b>a1</b>,
+        hoặc khi đối thủ mất sạch một loại quân.
+      </div>
+    </section>
+
+    <section id="game" class="game-layout hidden">
+      <aside class="side panel">
+        <div class="player-card" id="p1Card">
+          <span class="dot p1"></span>
+          <div><b>Player 1</b><small id="p1Name">Đang chờ</small></div>
+          <strong id="p1Ready">—</strong>
+        </div>
+        <div class="player-card" id="p2Card">
+          <span class="dot p2"></span>
+          <div><b>Player 2</b><small id="p2Name">Đang chờ</small></div>
+          <strong id="p2Ready">—</strong>
+        </div>
+
+        <div class="status">
+          <span id="turnText">Chờ đối thủ…</span>
+          <span id="message"></span>
+        </div>
+
+        <div class="counts">
+          <h3>Quân còn lại</h3>
+          <div id="countsBody"></div>
+        </div>
+
+        <button id="newGame" class="danger-btn hidden">Ván mới</button>
+        <p class="hint">Mẹo: chọn quân của bạn rồi chọn ô đích sáng lên.</p>
+      </aside>
+
+      <section class="board-wrap panel">
+        <div class="board-title">
+          <span>i9 = đích của P1</span>
+          <span>a1 = đích của P2</span>
+        </div>
+        <div id="board" class="board" aria-label="Bàn cờ OTTv2"></div>
+        <div class="legend">
+          <span>✊ Đấm</span><span>✋ Lá</span><span>✌️ Kéo</span>
+        </div>
+      </section>
+    </section>
+
+    <footer>
+      <span id="connection">● Connecting…</span>
+      <span>Powered by PlayHTML</span>
+    </footer>
+  </main>
+
+  <script type="module" src="game.js"></script>
+</body>
+</html>
