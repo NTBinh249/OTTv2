@@ -249,42 +249,68 @@ $("#newGame").addEventListener("click",resetGame);
 
 async function start() {
   try {
-    connectionEl.textContent="● Connecting…";
-    connectionEl.style.color="#fbbf24";
+    connectionEl.textContent = "● Đang kết nối PlayHTML…";
+    connectionEl.style.color = "#fbbf24";
 
+    // 1. Kết nối vào đúng room
     await playhtml.init({
-      room: () => `ottv2-${roomCode}`,
-      cursors: { enabled: false },
+      room: `ottv2-${roomCode}`,
       onError: () => {
-        connectionEl.textContent="● Mất kết nối";
-        connectionEl.style.color="#fb7185";
+        connectionEl.textContent = "● Mất kết nối PlayHTML";
+        connectionEl.style.color = "#fb7185";
       }
     });
 
-    connectionEl.textContent="● Connected";
-    connectionEl.style.color="#34d399";
+    // 2. Chờ PlayHTML đồng bộ dữ liệu ban đầu
     await playhtml.ready;
 
-    roomData = playhtml.createPageData("ottv2-room", {players:[null,null]});
-    gameData = playhtml.createPageData("ottv2-game", makeInitialState());
+    connectionEl.textContent = "● PlayHTML đã kết nối";
+    connectionEl.style.color = "#34d399";
 
-    roomData.onUpdate(d=>{ roomData.value=d; render(); });
-    gameData.onUpdate(d=>{ gameData.value=d; render(); });
+    // 3. Chỉ tạo page data SAU khi ready
+    roomData = playhtml.createPageData(
+      "ottv2-room",
+      {
+        players: [null, null]
+      }
+    );
 
-    render();
+    gameData = playhtml.createPageData(
+      "ottv2-game",
+      makeInitialState()
+    );
 
-    const current=roomData.getData();
+    // 4. Theo dõi thay đổi realtime
+    roomData.onUpdate(() => {
+      render();
+    });
+
+    gameData.onUpdate(() => {
+      render();
+    });
+
+    // 5. Xác định người chơi
+    const current = roomData.getData();
+
     if (current.players.includes(myId)) {
-      myPlayer=current.players.indexOf(myId)+1;
+      myPlayer = current.players.indexOf(myId) + 1;
     } else {
       await joinRoom();
     }
+
     render();
+
   } catch (err) {
-    console.error(err);
-    connectionEl.textContent="● Không kết nối được";
-    connectionEl.style.color="#fb7185";
-    joinStatus.textContent="Không kết nối được PlayHTML. Kiểm tra mạng rồi tải lại trang.";
+    console.error("PLAYHTML ERROR:", err);
+
+    connectionEl.textContent = "● Không kết nối được";
+    connectionEl.style.color = "#fb7185";
+
+    joinStatus.textContent =
+      "Không kết nối được PlayHTML. Mở F12 → Console để xem lỗi chi tiết.";
+
+    $("#message").textContent =
+      err?.message || String(err);
   }
 }
 
